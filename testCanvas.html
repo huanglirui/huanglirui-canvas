@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>canvas-circle</title>
+	<style>
+	* {margin: 0; padding: 0; list-style-type: none; }
+	body {padding: 20px;}
+	canvas {border: 1px solid red;}
+	div {margin: 20px;}
+	</style>
+</head>
+<body>
+	
+	<div style="background-color:#eee;">
+		<canvas width="160" height="160" id="canvas1">
+			请您使用更高版本的浏览器
+		</canvas>	
+		<canvas width="160" height="160" id="canvas2">
+			请您使用更高版本的浏览器
+		</canvas>	
+	</div>
+	<div style="background-color:#eee;">
+		<canvas width="400" height="200" id="canvas3">
+			请您使用更高版本的浏览器
+		</canvas>	
+	</div>
+	<div style="background-color:#eee;">
+		<canvas width="400" height="200" id="canvas4">
+			请您使用更高版本的浏览器
+		</canvas>	
+	</div>
+
+<script>	
+//	画出进度条加载的圆形
+
+	function CanvasCir (obj) {
+		this.canvas = obj.canvas;
+		this.ctx = this.canvas.getContext('2d');
+		this.colorArr = obj.colorArr;
+		this.corArr = obj.corArr;
+//		圆环的半径
+		this.radius = obj.radius;
+		this._init(this.ctx, this.colorArr, this.corArr, this.radius);
+	};
+
+	CanvasCir.prototype = {
+		constructor: CanvasCir, 
+		_init: function (ctx, colorArr, arr, radius) {
+			var num = Math.PI/180;
+			for (var i=1, len=colorArr.length; i<=len; i++) {
+				ctx.save();
+				ctx.translate(radius,radius);	
+				ctx.beginPath();	
+				ctx.strokeStyle = 'rgba(0,0,0,0)';
+				ctx.fillStyle = colorArr[i-1];
+				ctx.moveTo(0,0);	
+				ctx.arc(0,0,radius,arr[i-1]*num,arr[i]*num);
+				ctx.closePath();
+				ctx.stroke();
+				ctx.fill();
+				ctx.restore();
+			}
+//			画出大的遮罩圆
+			this._drawLayer(ctx, radius);
+
+		},
+		_drawLayer: function (ctx, radius) {
+			ctx.save();
+			ctx.translate(radius,radius);	
+			ctx.fillStyle = '#fff';
+			ctx.beginPath();	
+			ctx.arc(0,0,radius-20,0,Math.PI*2);
+			ctx.fill();
+			ctx.restore();
+		},
+		rePaint: function (colorArr, corArr) {
+//			这里可以调用的话来改变百分比
+			this._init(this.ctx, colorArr, corArr, this.radius);
+
+			var sum = 0;
+			for (var i=0,len=corArr.length; i<len; i++) {
+				sum += Math.abs(corArr[i]);
+			}
+			document.title = Math.ceil((sum/360)*100);
+		}
+	};
+
+
+//	画出矩形柱状图
+
+	function drawRect (arr, colorArr) {
+		var canvas3 = document.querySelector('#canvas3');
+		var ctx = canvas3.getContext('2d');
+		for (var i=0,len=arr.length; i<len; i++) {
+			var obj = arr[i];
+			ctx.beginPath();
+			ctx.fillStyle = colorArr[i];
+			ctx.rect(i*(obj.width+10),200-obj.height,obj.width,obj.height);
+			ctx.fill();
+			ctx.rect(i*(obj.width+10),200-obj.height-20,obj.width,10);
+			ctx.fill();
+			ctx.closePath();
+		}
+	};
+
+//	函数调用的起点。main方法
+	window.onload = function () {
+
+		var c = new CanvasCir({
+			canvas: document.querySelector('#canvas1'),
+			colorArr: ["#24a274","#2a70a6","#6d56c3","#b23880","#7a9a36","#b48548","#397839","#89489c"],
+			corArr: [-35, 140, 220, 255, 280, 295, 310, 320,325],
+			radius: 80
+		});
+
+		var c1 = new CanvasCir({
+			canvas: document.querySelector('#canvas2'),
+			colorArr: ["#ccc"],
+			corArr: [-35, 325],
+			radius: 80
+		});
+		c1.rePaint(['#7a9a36'], [-90,130]);
+
+
+		drawRect([
+			{width: 30,	height:130},
+			{width: 30,	height:30},
+			{width: 30,	height:170},
+			{width: 30,	height:150},
+			{width: 30,	height:10},
+			{width: 30,	height:120},
+			{width: 30,	height:123},
+			{width: 30,	height:60}
+		], ["#24a274","#2a70a6","#6d56c3","#b23880","#7a9a36","#b48548","#397839","#89489c"]);
+
+		testCanvas();
+
+	};
+
+//	测试canvas的模糊
+	function testCanvas () {
+		var canvas3 = document.querySelector('#canvas4');
+		var ctx = canvas3.getContext('2d');
+
+		ctx.beginPath();
+		ctx.shadowColor = '#000';
+		ctx.shadowOffsetX = 0;
+		ctx.shadowOffsetY = 0;
+		ctx.shadowBlur = 50;
+		ctx.fillStyle = '#89489c';
+		ctx.arc(60,60,50,0,Math.PI*2);
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.beginPath();
+
+		ctx.rect(180,50,200,120);
+		ctx.stroke();
+//		后面的吧前面的剪切掉
+		ctx.clip();
+
+		ctx.fillStyle="green";
+		ctx.fillRect(120,20,150,100);
+
+		ctx.closePath();
+	};
+
+</script>
+
+</body>
+</html>

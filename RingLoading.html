@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>product</title>
+	<style>
+	* {margin: 0; padding: 0; list-style-type: none; }
+	div {margin: 50px;}
+	</style>
+</head>
+<body>
+	<div style="width:160px;">
+		<canvas width="160" height="160" id="canvas1">
+			请您使用更高版本的浏览器
+		</canvas>	
+	</div>
+	<p id="txt"></p>
+
+
+
+<script src="js/RingLoading.js"></script>
+<script>
+	window.onload = function () {
+		var c  = new circleH({
+			canvas: document.querySelector('#canvas1'),
+			c1: '#397839',
+			c2: '#fff',
+			c3: '#b23880',
+			percent: 60,
+			huanW: 40,
+			cb: function (percent)  {
+				document.querySelector('#txt').innerHTML = percent;
+			}
+		});
+
+		document.onclick = function () {
+			c.update(45, true);
+		};
+	};
+</script>
+</body>
+</html>
