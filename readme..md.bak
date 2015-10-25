@@ -1,6 +1,6 @@
-#canvas动态百分比显示圆环，可改变圆环的百分比
-##具体的效果图可查看图片文件
-##基本的API
+##canvas动态百分比显示圆环，可改变圆环的百分比
+#具体的效果图可查看图片文件
+#基本的API
  /*	var c  = new circleH({
   *		canvas对象
   *		canvas: document.querySelector('#canvas1'),
@@ -20,9 +20,9 @@
   */
 
 
-#canvas静态的圆饼图
-##具体的效果图可查看图片文件
-##基本的API
+##canvas静态的圆饼图
+#具体的效果图可查看图片文件
+#基本的API
 
 /**
   *	var c = new PieChart({
