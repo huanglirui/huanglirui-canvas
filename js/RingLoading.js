@@ -51,6 +51,7 @@
 			this.center = this.radius/2;
 //			执行的回调函数
 			this.cb = obj.cb;
+			this._startTime = new Date();
 			this._init();
 		};
 
@@ -129,6 +130,11 @@
 			},
 //			更新百分比，对外部暴露的方法
 			update: function (percent, change) {
+				var curTime = new Date();
+				if ( curTime - this._startTime < 500 ) {
+					return false;
+				}
+				this._startTime = curTime;
 				this._drawHlaf(this.c3, percent, change);
 			}
 		};
